@@ -1,4 +1,4 @@
-# Aproximacion del Numero pi
+# Aproximacion del Numero π
 
 ## Introduccion
 
