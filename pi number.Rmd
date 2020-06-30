@@ -1,0 +1,150 @@
+---
+title: "Aproximacion del numero pi"
+author: "Marlon Gaviria Pérez"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduccion
+
+Entre tantas maneras que se ha aproximado el famoso numero $\pi$, hoy se aproximara con probabilidades.
+
+\
+
+\
+
+Veamos lo siguiente, se tiene un circulo de radio **r** circunscrito a un cuadrado de lado 2**r**, como se ilustra acontinuacion.
+
+```{r, echo=FALSE}
+
+x0 <- runif(100,-1,1)
+y0 <- runif(100,-1,1)
+
+circulo <- function(x) c(sqrt(1-(x**2)))
+
+y=(circulo(seq(-1,1,length.out = 1000)))
+
+plot(1,1,xlim = c(-1.5,1.5),ylim = c(-1.5,1.5), col = 'white', axes = F, asp = 1)
+grid()
+points(seq(-1,1,length.out = 1000),c(y), type = 'l')
+points(seq(-1,1,length.out = 1000),c(-1*y), type = 'l')
+segments(-1,1,1,1)
+segments(-1,1,-1,-1)
+segments(-1,-1,1,-1)
+segments(1,1,1,-1)
+segments(0,0,1,0, col = 'red')
+text(0.5,0.2,'r')
+text(0,1.2,'2r')
+```
+
+Ahora, con la idea de aproximar al valor del numero $\pi$, nos apoyaremos en probabilidades, en este caso, se determinara la probabilidad de que un punto albergado aleatoriamente dentro del cuadrado este dentro del circulo, Suponga que A es el evento que define 'el punto esta dentro del circulo', con lo cual la probabilidad teorica es el area del circulo dividido el area del cuadrado, asi:
+
+$P(A)= Area \quad del \quad circulo/ Area \quad del \quad cuadrado$
+
+$P(A)=\frac { \pi { r }^{ 2 } }{ 4{ r }^{ 2 } } =\frac { \pi  }{ 4 }$
+
+en otras palabras tenemos que $4P(A)=\pi$, significa que 4 veces la probabilidad de que un punto aleatorio caiga dentro del circulo es equivalente al numero $\pi$.
+
+\
+
+\
+
+De lo anterior podemos concluir que si logramos tener el valor de la probabilidad $P(A)$, podremos obtener el valor de $\pi$, con lo cual, podemos aproximar la probabilidad por simulacion, y asi aproximarnos al valor de $\pi$
+
+
+Suponga que con un software, garantizamos que se pintan aleatoriamente 100 puntos en el cuadrado, como se observa:
+
+```{r, echo=FALSE}
+
+color <- function(x0,y0){
+  i=1
+  col <- c()
+  for (i in 1:length(x0)){
+    
+    if((x0[i]**2)+(y0[i]**2)<=1) col[i]='red'
+    else col[i]='blue'
+    i=i+1
+
+  }
+  col
+  }
+
+n <- 100
+x0 <- runif(n,-1,1)
+y0 <- runif(n,-1,1)
+
+circulo <- function(x) c(sqrt(1-(x**2)))
+
+y=(circulo(seq(-1,1,length.out = 1000)))
+
+plot(1,1,xlim = c(-1.5,1.5),ylim = c(-1.5,1.5), col = 'white', axes = F, asp = 1)
+grid()
+points(seq(-1,1,length.out = 1000),c(y), type = 'l')
+points(seq(-1,1,length.out = 1000),c(-1*y), type = 'l')
+segments(-1,1,1,1)
+segments(-1,1,-1,-1)
+segments(-1,-1,1,-1)
+segments(1,1,1,-1)
+points(x0,y0, col= color(x0,y0), pch=16)
+text(0,1.2,c('proporcion de puntos dentro de el circulo \n  \n',sum((x0**2)+(y0**2)<=1)/n))
+
+```
+
+en este caso el 83% de los puntos caen dentro del circulo, con lo que una estimacion para $\pi$ seria, 4(0.83)=3.32, por supuesto es un acercamiento lejano del valor que esperamos, esto se debe a que solo utilizamos 100 puntos para aproximar la probabilidad.
+
+\
+
+\
+
+Intentemoslo con un valor mas grande de puntos, por ejemplo 100.000 puntos:
+
+```{r,echo=FALSE}
+
+color <- function(x0,y0){
+  i=1
+  col <- c()
+  for (i in 1:length(x0)){
+    
+    if((x0[i]**2)+(y0[i]**2)<=1) col[i]='red'
+    else col[i]='blue'
+    i=i+1
+
+  }
+  col
+  }
+
+n <- 100000
+x0 <- runif(n,-1,1)
+y0 <- runif(n,-1,1)
+
+circulo <- function(x) c(sqrt(1-(x**2)))
+
+y=(circulo(seq(-1,1,length.out = 1000)))
+
+plot(1,1,xlim = c(-1.5,1.5),ylim = c(-1.5,1.5), col = 'white', axes = F, asp = 1)
+grid()
+points(seq(-1,1,length.out = 1000),c(y), type = 'l')
+points(seq(-1,1,length.out = 1000),c(-1*y), type = 'l')
+segments(-1,1,1,1)
+segments(-1,1,-1,-1)
+segments(-1,-1,1,-1)
+segments(1,1,1,-1)
+points(x0,y0, col= color(x0,y0), pch=16)
+text(0,1.2,c('proporcion de puntos dentro de el circulo \n  \n',sum((x0**2)+(y0**2)<=1)/n))
+
+```
+
+Note que la proporcion ahora es 0.78712, con lo que 4(0.78712)=3.14848, algo mas cercano al valor de $\pi$.
+
+si repetimos esto indefinidamente con grandes cantidades de puntos, podriamos promediar estas probabilidades, y ser aun mas certeros.
+
+\
+
+\
+
+por ejemplo, si repetimos esto 10.000 veces, donde en cada ocacion consideramos 100.000 puntos, tendremos como estimacion del valor de  $\pi$ a  3.141585, con que es un buen acercamiento de estimacion al valor verdadero $\pi.$
